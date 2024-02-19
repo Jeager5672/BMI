@@ -27,10 +27,11 @@ my_label2.pack()
 
 # boy entry
 my_entry2 = Entry(width=30)
-my_entry2.focus()  # ilk buradan başlar
 my_entry2.pack()
 
-result_label = None  # Sonuç etiketini depolamak için
+result_label = Label()
+result_label.pack()
+# Sonuç etiketini depolamak için
 # Kullanıcı her butona bastığında eski sonucu silip yeni sonucu ekrana yazdırmak istiyorsak,
 # her seferinde yeni bir etiket oluşturmak yerine aynı etiketi güncelleyebiliriz.
 # Bu şekilde yaparız güncellemeyi
@@ -43,32 +44,21 @@ def button():
     text1 = my_entry2.get()
 
     if text.isdigit() and text1.isdigit():
-        if int(text1) < 100 or int(text) < 10:
-            if result_label:  # Eğer sonuç etiketi zaten varsa sil
-                result_label.destroy()
-            result_label = Label(text="Boyunuz 100cm'den, kilonuz 10kg'dan az olamaz !")
-            result_label.pack()
+        boy_cm = int(text1)
+        kilo_kg = int(text)
+        boy_metre = boy_cm / 100
+        vki = kilo_kg / (boy_metre ** 2)
+
+        if vki > 25:
+            result_text = "Endeks: {:.1f} Fazla Kilo".format(vki)
+        elif vki < 18.5:
+            result_text = "Endeks: {:.1f} Zayıf".format(vki)
         else:
-            boy_cm = int(text1)
-            kilo_kg = int(text)
-            boy_metre = boy_cm / 100
-            vki = kilo_kg / (boy_metre ** 2)
+            result_text = "Endeks: {:.1f} Normal Kilo".format(vki)
 
-            if result_label:  # Eğer sonuç etiketi zaten varsa sil
-                result_label.destroy()
-
-            if vki > 25:
-                result_label = Label(text="Endeks: {:.1f} Fazla Kilo".format(vki))
-            elif vki < 18.5:
-                result_label = Label(text="Endeks: {:.1f} Zayıf".format(vki))
-            elif 18.5 <= vki < 25:
-                result_label = Label(text="Endeks: {:.1f} Normal Kilo".format(vki))
-
-            result_label.pack()
+        result_label.config(text=result_text)
     else:
-        result_label = Label(text="Geçerli bir sayı giriniz.")
-        result_label.pack()
-
+        result_label.config(text="Geçerli bir sayı giriniz.")
 
 my_button = Button(text="Hesapla", command=button)
 my_button.config(padx=1, pady=1)
